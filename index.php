@@ -39,8 +39,27 @@
         ],
 
     ];
-    $parking = $_GET['parking'];
-    $vote = $_GET['vote'];
+    $filtered_hotels = $hotels;
+
+    if(!empty($_GET['parking']) || $_GET['parking'] == 0){
+        $temp_hotels = [];
+        foreach($filtered_hotels as $hotel){
+            if($hotel['parking'] == $_GET['parking']) {
+                $temp_hotels[] = $hotel;
+            }
+        }
+        $filtered_hotels = $temp_hotels;
+    }
+    if(!empty($_GET['vote'])){
+        $temp_hotels = [];
+        foreach($filtered_hotels as $hotel){
+            if($hotel['vote'] >= $_GET['vote']) {
+                $temp_hotels[] = $hotel;
+            }
+        }
+        $filtered_hotels = $temp_hotels;
+    }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -56,20 +75,39 @@
     <form action="index.php">
         <label for="parking">Parking</label>
         <select name="parking" id="parking-filter">
-            <option value="si">Si</option>
-            <option value="no">No</option>
+            <option value="" selected>Nessuna preferenza</option>
+            <option value="1">Si</option>
+            <option value="0">No</option>
         </select>
         <label for="vote">Voto struttura</label>
         <select name="vote" id="vote-filter">
+            <option value="" selected>Nessuna preferenza</option>
             <option value="1">1</option>
-            <option value="1">2</option>
-            <option value="1">3</option>
-            <option value="1">4</option>
-            <option value="1">5</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
         </select>
-        <button type="submit">Invia</button>
+        <button type="submit" class="btn btn-primary">Invia</button>
     </form>
-    <?php foreach ($hotels as $key => $value){ ?>
+    <div class="row">
+        <div class="col">
+            <span>Nome</span>
+        </div>
+        <div class="col">
+            <span>Descrizione</span>
+        </div>
+        <div class="col">
+            <span>Descrizione</span>
+        </div>
+        <div class="col">
+            <span>Descrizione</span>
+        </div>
+        <div class="col">
+            <span>Descrizione</span>
+        </div>
+    </div>
+    <?php foreach ($filtered_hotels as $key => $value){ ?>
         <?php if($value['parking'] || $value['vote']){
             ?>
         <div class="row">
@@ -89,10 +127,10 @@
                 ?></span>
             </div>
             <div class="col">
-                <span><?php echo $value['vote']?></span>
+                <span class="font-weight-bold"><?php echo $value['vote']?></span>
             </div>
             <div class="col">
-                <span><?php echo $value['distance_to_center']?></span>
+                <span class="font-weight-bold"><?php echo $value['distance_to_center']?></span>
             </div>
         </div>
         <?php } ?>
